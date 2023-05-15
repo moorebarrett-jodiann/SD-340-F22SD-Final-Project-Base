@@ -3,14 +3,7 @@
 <form asp-action="ReassignRole" asp-controller="Admin">
     <div class="form-group">
 	<label class="control-label">Choose a User</label>
-	<select name="userId" id="userId">
-		@foreach (ApplicationUser user in Model)
-		{
-			<option value="@user.Id">
-				@user.UserName
-			</option>
-		}
-	</select>
+	<select name="userId" asp-items=@ViewBag.Users></select>
 	<span class="text-danger"></span>
 </div>
 
