@@ -16,13 +16,13 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 
-// inject repository interfaces
+// inject Repositiory Interfaces
 builder.Services.AddScoped<IRepository<ApplicationUser>, ApplicationUserRepository>();
-builder.Services.AddScoped<IRepository<Comment>, CommentRepository>();
 builder.Services.AddScoped<IRepository<Project>, ProjectRepository>();
 builder.Services.AddScoped<IRepository<Ticket>, TicketRepository>();
 builder.Services.AddScoped<IRepository<TicketWatcher>, TicketWatcherRepository>();
 builder.Services.AddScoped<IRepository<UserProject>, UserProjectRepository>();
+builder.Services.AddScoped<IRepository<Comment>, CommentRepository>();
 
 var app = builder.Build();
 

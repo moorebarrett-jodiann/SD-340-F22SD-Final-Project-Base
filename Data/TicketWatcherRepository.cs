@@ -5,16 +5,16 @@ namespace SD_340_W22SD_Final_Project_Group6.Data
     public class TicketWatcherRepository : IRepository<TicketWatcher>
     {
         private ApplicationDbContext _context;
-
+        
         public TicketWatcherRepository(ApplicationDbContext context)
         {
             _context = context;
         }
-
+        
         public void Create(TicketWatcher entity)
         {
             _context.TicketWatchers.Add(entity);
-            _context.SaveChanges(); ;
+            _context.SaveChanges();
         }
 
         public void Delete(TicketWatcher entity)
@@ -30,7 +30,7 @@ namespace SD_340_W22SD_Final_Project_Group6.Data
 
         public TicketWatcher? GetById(int? id)
         {
-            return _context.TicketWatchers.Find(id);
+            return _context.TicketWatchers.First(tw => tw.Id == id);
         }
 
         public void Update(TicketWatcher entity)
