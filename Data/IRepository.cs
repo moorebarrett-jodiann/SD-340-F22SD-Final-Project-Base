@@ -2,18 +2,17 @@
 {
     public interface IRepository<T> where T : class
     {
-        // Create
+        // CREATE
         void Create(T entity);
 
-        //Read
+        // READ
         T? GetById(int? id);
         ICollection<T> GetAll();
 
-        //Update 
+        // UPDATE
         void Update(T entity);
 
-        // Delete 
+        // DELETE
         void Delete(T entity);
-
     }
 }
