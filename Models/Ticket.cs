@@ -26,6 +26,7 @@ namespace SD_340_W22SD_Final_Project_Group6.Models
 
         [DisplayName("Project :")]
         public Project? Project { get; set; }
+        public int? ProjectId { get; set; }
 
         [DisplayName("Ticket Priority :")]
         public Priority? TicketPriority { get; set; }

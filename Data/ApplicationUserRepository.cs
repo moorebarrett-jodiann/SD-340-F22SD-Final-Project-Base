@@ -1,4 +1,5 @@
-﻿using SD_340_W22SD_Final_Project_Group6.Models;
+﻿using Microsoft.AspNetCore.Identity;
+using SD_340_W22SD_Final_Project_Group6.Models;
 
 namespace SD_340_W22SD_Final_Project_Group6.Data
 {
@@ -6,10 +7,10 @@ namespace SD_340_W22SD_Final_Project_Group6.Data
     {
         private ApplicationDbContext _context;
 
-        public ApplicationUserRepository(ApplicationDbContext context)
+		public ApplicationUserRepository(ApplicationDbContext context)
         {
             _context = context;
-        }
+		}
 
         public void Create(ApplicationUser entity)
         {
