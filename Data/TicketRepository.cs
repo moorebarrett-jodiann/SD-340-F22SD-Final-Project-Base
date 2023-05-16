@@ -5,14 +5,14 @@ namespace SD_340_W22SD_Final_Project_Group6.Data
     public class TicketRepository : IRepository<Ticket>
     {
         private ApplicationDbContext _context;
-
+        
         public TicketRepository(ApplicationDbContext context)
         {
             _context = context;
         }
-
+        
         public void Create(Ticket entity)
-        {
+        {        
             _context.Tickets.Add(entity);
             _context.SaveChanges();
         }
@@ -30,7 +30,7 @@ namespace SD_340_W22SD_Final_Project_Group6.Data
 
         public Ticket? GetById(int? id)
         {
-            return _context.Tickets.Find(id);
+            return _context.Tickets.First(t => t.Id == id);
         }
 
         public void Update(Ticket entity)

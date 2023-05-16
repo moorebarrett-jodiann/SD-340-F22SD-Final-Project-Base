@@ -14,6 +14,5 @@
 
         // DELETE
         void Delete(T entity);
-
     }
 }

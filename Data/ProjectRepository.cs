@@ -5,15 +5,15 @@ namespace SD_340_W22SD_Final_Project_Group6.Data
     public class ProjectRepository : IRepository<Project>
     {
         private ApplicationDbContext _context;
-
+        
         public ProjectRepository(ApplicationDbContext context)
         {
             _context = context;
         }
-
+        
         public void Create(Project entity)
         {
-            _context.Projects.Add(entity);
+            _context.Projects.Add(entity);            
             _context.SaveChanges();
         }
 
@@ -30,7 +30,7 @@ namespace SD_340_W22SD_Final_Project_Group6.Data
 
         public Project? GetById(int? id)
         {
-            return _context.Projects.Find(id);
+            return _context.Projects.First(p => p.Id == id);
         }
 
         public void Update(Project entity)

@@ -5,14 +5,14 @@ namespace SD_340_W22SD_Final_Project_Group6.Data
     public class UserProjectRepository : IRepository<UserProject>
     {
         private ApplicationDbContext _context;
-
+        
         public UserProjectRepository(ApplicationDbContext context)
         {
             _context = context;
         }
-
+        
         public void Create(UserProject entity)
-        {
+        {        
             _context.UserProjects.Add(entity);
             _context.SaveChanges();
         }
@@ -30,7 +30,7 @@ namespace SD_340_W22SD_Final_Project_Group6.Data
 
         public UserProject? GetById(int? id)
         {
-            return _context.UserProjects.Find(id);
+            return _context.UserProjects.First(up => up.Id == id);
         }
 
         public void Update(UserProject entity)
