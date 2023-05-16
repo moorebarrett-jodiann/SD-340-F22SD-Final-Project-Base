@@ -52,15 +52,6 @@ namespace SD_340_W22SD_Final_Project_Group6.BLL
                             project.AssignedTo = userProjects;
                             project.Tickets = tickets;
                         }
-
-                        //SortedProjs =
-                        // _context.Projects
-                        //.Include(p => p.CreatedBy)
-                        //.Include(p => p.AssignedTo)
-                        //.ThenInclude(at => at.ApplicationUser)
-                        //.Include(p => p.Tickets.OrderByDescending(t => t.TicketPriority))
-                        //.ThenInclude(t => t.Owner)
-                        //.ToListAsync();
                     }
                     else
                     {
@@ -80,17 +71,10 @@ namespace SD_340_W22SD_Final_Project_Group6.BLL
                             project.AssignedTo = userProjects;
                             project.Tickets = tickets;
                         }
-                        //SortedProjs =
-                        // _context.Projects
-                        //.Include(p => p.CreatedBy)
-                        //.Include(p => p.AssignedTo)
-                        //.ThenInclude(at => at.ApplicationUser)
-                        //.Include(p => p.Tickets.OrderBy(t => t.TicketPriority))
-                        //.ThenInclude(t => t.Owner)
-                        //.ToListAsync();
                     }
 
                 break;
+
                 case "RequiredHrs":
                     if (sort == true)
                     {
@@ -110,14 +94,6 @@ namespace SD_340_W22SD_Final_Project_Group6.BLL
                             project.AssignedTo = userProjects;
                             project.Tickets = tickets;
                         }
-                        //SortedProjs =
-                        // _context.Projects
-                        //.Include(p => p.CreatedBy)
-                        //.Include(p => p.AssignedTo)
-                        //.ThenInclude(at => at.ApplicationUser)
-                        //.Include(p => p.Tickets.OrderByDescending(t => t.RequiredHours))
-                        //.ThenInclude(t => t.Owner)
-                        //.ToListAsync();
                     }
                     else
                     {
@@ -137,17 +113,10 @@ namespace SD_340_W22SD_Final_Project_Group6.BLL
                             project.AssignedTo = userProjects;
                             project.Tickets = tickets;
                         }
-                        //SortedProjs =
-                        //_context.Projects
-                        //.Include(p => p.CreatedBy)
-                        //.Include(p => p.AssignedTo)
-                        //.ThenInclude(at => at.ApplicationUser)
-                        //.Include(p => p.Tickets.OrderBy(t => t.RequiredHours))
-                        //.ThenInclude(t => t.Owner)
-                        //.ToListAsync();
                     }
 
                 break;
+
                 case "Completed":
 
                     // get all projects
@@ -166,15 +135,9 @@ namespace SD_340_W22SD_Final_Project_Group6.BLL
                         project.AssignedTo = userProjects;
                         project.Tickets = tickets;
                     }
-                    //SortedProjs =
-                    //_context.Projects
-                    //.Include(p => p.CreatedBy)
-                    //.Include(p => p.AssignedTo)
-                    //.ThenInclude(at => at.ApplicationUser)
-                    //.Include(p => p.Tickets.Where(t => t.Completed == true))
-                    //.ThenInclude(t => t.Owner)
-                    //.ToListAsync();
+
                 break;
+
                 default:
                     if (developerId != null)
                     {
@@ -201,17 +164,6 @@ namespace SD_340_W22SD_Final_Project_Group6.BLL
                             project.AssignedTo = userProjects;
                             project.Tickets = tickets;
                         }
-
-                        //SortedProjs =
-                        //_context.Projects
-                        //.OrderBy(p => p.ProjectName)
-                        //.Include(p => p.CreatedBy)
-                        //.Include(p => p.AssignedTo)
-                        //.ThenInclude(at => at.ApplicationUser)
-                        //.Include(p => p.Tickets.Where(t => t.Owner.Id.Equals(developerId)))
-                        //.ThenInclude(t => t.Owner)
-                        //.Include(p => p.Tickets).ThenInclude(t => t.TicketWatchers).ThenInclude(tw => tw.Watcher)
-                        //.ToListAsync();
                     }
                     else
                     {
@@ -238,16 +190,6 @@ namespace SD_340_W22SD_Final_Project_Group6.BLL
                             project.AssignedTo = userProjects;
                             project.Tickets = tickets;
                         }
-                        //SortedProjs =
-                        //_context.Projects
-                        //.OrderBy(p => p.ProjectName)
-                        //.Include(p => p.CreatedBy)
-                        //.Include(p => p.AssignedTo)
-                        //.ThenInclude(at => at.ApplicationUser)
-                        //.Include(p => p.Tickets)
-                        //.ThenInclude(t => t.Owner)
-                        //.Include(p => p.Tickets).ThenInclude(t => t.TicketWatchers).ThenInclude(tw => tw.Watcher)
-                        //.ToListAsync();
                     }
 
                 break;
