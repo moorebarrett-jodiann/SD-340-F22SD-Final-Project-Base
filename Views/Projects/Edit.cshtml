@@ -1,4 +1,4 @@
-﻿@model SD_340_W22SD_Final_Project_Group6.Models.Project
+﻿@model SD_340_W22SD_Final_Project_Group6.Models.ViewModel.CreateProjectVM
 
 @{
     ViewData["Title"] = "Edit";
@@ -43,7 +43,7 @@
                 <div class="form-group">
                     <input type="hidden" value=@Model.Id name="ticketId" />
                     <label asp-for="AssignedTo" class="control-label">Select Users:</label>
-                    <select name="userIds" asp-for="AssignedTo" asp-items=@ViewBag.Users></select>
+                    <select name="DeveloperIds" asp-for="AssignedTo" asp-items=@Model.Developers></select>
                     <span asp-validation-for="AssignedTo" class="text-danger"></span>
                 </div>
             <div class="form-group">

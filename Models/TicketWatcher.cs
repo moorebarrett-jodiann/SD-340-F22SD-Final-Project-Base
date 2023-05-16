@@ -4,6 +4,8 @@
     {
         public int Id { get; set; }
         public ApplicationUser Watcher { get; set; }
+        public int? WatcherId { get; set; }
         public Ticket Ticket { get; set; }
+        public int? TicketId { get; set; }
     }
 }
