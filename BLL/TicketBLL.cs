@@ -16,6 +16,30 @@ namespace SD_340_W22SD_Final_Project_Group6.BLL
             _ticketRepo = ticketRepo;
             _users = users;
         }
+        public List<Ticket> ListTickets()
+        {
+            // get all tickets
+            List<Ticket> tickets = _ticketRepo.GetAll().ToList();
+
+            // loop through all tickets and assign their entity lists
+            foreach(Ticket ticket in tickets)
+            {
+                // Fetch ticketProject using ProjectRepository
+                ticket.Project = _projectRepo.GetById(ticket.ProjectId);
+
+                // Fetch TicketOwner using ApplicationUserRepository
+                ticket.Owner = ticket.Owner;
+            }
+
+            if (tickets == null)
+            {
+                throw new NullReferenceException("No Tickets available");
+            }
+            else
+            {
+                return tickets;
+            }
+        }
 
         public List<Ticket> GetTickets()
         {
@@ -57,5 +81,6 @@ namespace SD_340_W22SD_Final_Project_Group6.BLL
                 _ticketRepo.Delete(ticket);
             }
         }
+
     }
 }

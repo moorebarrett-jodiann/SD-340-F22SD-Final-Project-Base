@@ -39,7 +39,7 @@ namespace SD_340_W22SD_Final_Project_Group6.BLL
                         // get all projects
                         SortedProjs = _projectRepo.GetAll().ToList();
 
-                        // loop through all projects and assign their entiy lists
+                        // loop through all projects and assign their entity lists
                         foreach (Project project in SortedProjs)
                         {
                             // Fetch userProjects using ProjectDeveloperRepository

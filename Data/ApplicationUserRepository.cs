@@ -29,7 +29,7 @@ namespace SD_340_W22SD_Final_Project_Group6.Data
 
         public ApplicationUser? GetById(int? id)
         {
-            throw new NotImplementedException(); 
+            throw new NotImplementedException();
         }
 
         public void Update(ApplicationUser entity)
