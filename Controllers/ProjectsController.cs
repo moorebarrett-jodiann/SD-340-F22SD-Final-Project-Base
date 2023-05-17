@@ -174,7 +174,7 @@ namespace SD_340_W22SD_Final_Project_Group6.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "ProjectManager")]
-        public async Task<IActionResult> Edit([Bind("Id,ProjectName,Developers,DeveloperIds,AssignedTo")] CreateProjectVM vm)
+        public async Task<IActionResult> Edit([Bind("Id,ProjectName,Developers,DeveloperIds")] CreateProjectVM vm)
         {
             try
             {

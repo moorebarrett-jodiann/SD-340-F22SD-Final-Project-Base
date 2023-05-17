@@ -283,15 +283,19 @@ namespace SD_340_W22SD_Final_Project_Group6.BLL
                 // create ticket watcher
                 TicketWatcher newTickWatch = new TicketWatcher();
 				newTickWatch.Ticket = ticket;
-				newTickWatch.Watcher = user;
-                _ticketWatcherRepo.Create(newTickWatch);
+                newTickWatch.TicketId = ticketId;
+                newTickWatch.Watcher = user;
+                newTickWatch.WatcherId = user.Id;
+				_ticketWatcherRepo.Create(newTickWatch);
 
-                // create relationship between user and ticketwatcher
-                user.TicketWatching.Add(newTickWatch);
+				// create relationship between user and ticketwatcher
+				user.TicketWatching.Add(newTickWatch);
 
                 // create relationship between ticket and ticketwatcher
                 ticket.TicketWatchers.Add(newTickWatch);
-            }
+
+				
+			}
 		}
 
         public void RemoveFromWatchers(int ticketId, ApplicationUser user)

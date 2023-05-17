@@ -98,7 +98,7 @@ namespace SD_340_W22SD_Final_Project_Group6.Controllers
             try
             {
 				_ticketBll.CreateTicket(vm);
-				return RedirectToAction("Index", "Tickets", new { area = "" });
+				return RedirectToAction("Index", "Projects", new { area = "" });
 			}
             catch(Exception ex)
             {

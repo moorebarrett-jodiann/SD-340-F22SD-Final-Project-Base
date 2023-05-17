@@ -162,7 +162,7 @@ namespace SD_340_W22SD_Final_Project_Group6.BLL
 								// fetch ticketWatcher watchers
 								foreach (TicketWatcher tw in ticket.TicketWatchers)
 								{
-									tw.Watcher = _users.Users.FirstOrDefault(u => u.Id == developerId);
+									tw.Watcher = _users.Users.FirstOrDefault(u => u.Id == tw.WatcherId);
 								}
 							}
 
@@ -194,7 +194,7 @@ namespace SD_340_W22SD_Final_Project_Group6.BLL
                                 // fetch ticketWatcher watchers
                                 foreach(TicketWatcher tw in ticket.TicketWatchers)
                                 {
-                                    tw.Watcher = _users.Users.FirstOrDefault(u => u.Id == ticket.ApplicationUser);
+                                    tw.Watcher = _users.Users.FirstOrDefault(u => u.Id == tw.WatcherId);
                                 }
                             }
 
@@ -345,6 +345,9 @@ namespace SD_340_W22SD_Final_Project_Group6.BLL
 						newUserProj.Project = project;
 						project.AssignedTo.Add(newUserProj);
 					});
+
+                    // update project properties
+                    project.ProjectName = vm.ProjectName;
 
 					// update project
 					_projectRepo.Update(project);
