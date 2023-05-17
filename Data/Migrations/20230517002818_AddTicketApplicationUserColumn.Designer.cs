@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SD_340_W22SD_Final_Project_Group6.Data;
 
@@ -11,9 +12,10 @@ using SD_340_W22SD_Final_Project_Group6.Data;
 namespace SD_340_W22SD_Final_Project_Group6.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230517002818_AddTicketApplicationUserColumn")]
+    partial class AddTicketApplicationUserColumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -328,18 +330,20 @@ namespace SD_340_W22SD_Final_Project_Group6.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("TicketId")
+                    b.Property<int?>("TicketId")
                         .HasColumnType("int");
 
-                    b.Property<string>("WatcherId")
-                        .IsRequired()
+                    b.Property<int?>("WatcherId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("WatcherId1")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("TicketId");
 
-                    b.HasIndex("WatcherId");
+                    b.HasIndex("WatcherId1");
 
                     b.ToTable("TicketWatchers");
                 });
@@ -468,15 +472,11 @@ namespace SD_340_W22SD_Final_Project_Group6.Data.Migrations
                 {
                     b.HasOne("SD_340_W22SD_Final_Project_Group6.Models.Ticket", "Ticket")
                         .WithMany("TicketWatchers")
-                        .HasForeignKey("TicketId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .HasForeignKey("TicketId");
 
                     b.HasOne("SD_340_W22SD_Final_Project_Group6.Models.ApplicationUser", "Watcher")
                         .WithMany("TicketWatching")
-                        .HasForeignKey("WatcherId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .HasForeignKey("WatcherId1");
 
                     b.Navigation("Ticket");
 

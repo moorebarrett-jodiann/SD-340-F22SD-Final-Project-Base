@@ -21,17 +21,15 @@ namespace SD_340_W22SD_Final_Project_Group6.Controllers
     [Authorize(Roles = "ProjectManager, Developer")]
     public class ProjectsController : Controller
     {
-        //private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _users;
         private readonly ProjectBLL _projectBll;
         private readonly UserProjectBLL _userProjectBll;
 
-        public ProjectsController(IRepository<Project> projectRepo, IRepository<UserProject> userProjectRepo, IRepository<Ticket> ticketRepo, IRepository<TicketWatcher> ticketWatcherRepo, UserManager<ApplicationUser> users, ApplicationDbContext context)
+        public ProjectsController(IRepository<Project> projectRepo, IRepository<UserProject> userProjectRepo, IRepository<Ticket> ticketRepo, IRepository<TicketWatcher> ticketWatcherRepo, UserManager<ApplicationUser> users)
         {
             _projectBll = new ProjectBLL(projectRepo, userProjectRepo, ticketRepo, ticketWatcherRepo, users);
             _userProjectBll = new UserProjectBLL(userProjectRepo, projectRepo, users);
             _users = users;
-			//_context = context;
 		}
 
         // GET: Projects
@@ -228,5 +226,17 @@ namespace SD_340_W22SD_Final_Project_Group6.Controllers
                 return NotFound();
             }
         }
-    }
+
+		private bool ProjectExists(int id)
+		{
+            if(_projectBll.GetProject(id) != null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+		}
+	}
 }

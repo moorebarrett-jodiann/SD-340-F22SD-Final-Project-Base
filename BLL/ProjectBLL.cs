@@ -158,7 +158,13 @@ namespace SD_340_W22SD_Final_Project_Group6.BLL
                             {
                                 // Fetch TicketWatchers using TicketWatcherRepository
                                 ticket.TicketWatchers = _ticketWatcherRepo.GetAll().Where(tw => tw.TicketId == ticket.Id).ToList();
-                            }
+
+								// fetch ticketWatcher watchers
+								foreach (TicketWatcher tw in ticket.TicketWatchers)
+								{
+									tw.Watcher = _users.Users.FirstOrDefault(u => u.Id == developerId);
+								}
+							}
 
                             // Assign the fetched entities to the project
                             project.AssignedTo = userProjects;
@@ -184,6 +190,12 @@ namespace SD_340_W22SD_Final_Project_Group6.BLL
                             {
                                 // Fetch TicketWatchers using TicketWatcherRepository
                                 ticket.TicketWatchers = _ticketWatcherRepo.GetAll().Where(tw => tw.TicketId == ticket.Id).ToList();
+
+                                // fetch ticketWatcher watchers
+                                foreach(TicketWatcher tw in ticket.TicketWatchers)
+                                {
+                                    tw.Watcher = _users.Users.FirstOrDefault(u => u.Id == ticket.ApplicationUser);
+                                }
                             }
 
                             // Assign the fetched entities to the project
@@ -223,6 +235,33 @@ namespace SD_340_W22SD_Final_Project_Group6.BLL
 		public List<Project> GetProjects()
 		{
 			return _projectRepo.GetAll().ToList();
+		}
+
+        public List<UserProject> GetProjectUsers(int? id)
+        {
+			if (id == null)
+			{
+				throw new NullReferenceException("Project Id cannot be null");
+			}
+			else
+			{
+				List<UserProject> projectUsers = _userProjectRepo.GetAll().Where(up => up.ProjectId == id).ToList();
+
+				if (projectUsers == null)
+				{
+					throw new KeyNotFoundException();
+				}
+				else
+				{
+                    // fetch application user objects
+                    foreach (UserProject user in projectUsers)
+                    {
+                        user.ApplicationUser = _users.Users.FirstOrDefault(u => u.Id == user.UserId);
+                    }
+
+					return projectUsers;
+				}
+			}
 		}
 
 		public Project? GetProject(int? id) {
