@@ -23,10 +23,10 @@ namespace SD_340_W22SD_Final_Project_Group6.Controllers
         private readonly TicketBLL _ticketBll;
         private readonly ProjectBLL _projectBll;        
 
-        public TicketsController( IRepository<Ticket> ticketRepo, UserManager<ApplicationUser> users, IRepository<Project> projectRepo, IRepository<TicketWatcher> ticketWatcherRepo, IRepository<Comment> commentRepo, IRepository<UserProject> userProjectRepo)
+        public TicketsController( IRepository<Ticket> ticketRepo, UserManager<ApplicationUser> users, IRepository<Project> projectRepo, IRepository<TicketWatcher> ticketWatcherRepo, IRepository<Comment> commentRepo ,IRepository<UserProject> userProjectRepo)
         {
             _users = users;
-            _ticketBll = new TicketBLL(projectRepo, ticketRepo, ticketWatcherRepo, commentRepo, users);
+            _ticketBll = new TicketBLL(projectRepo, ticketRepo, ticketWatcherRepo, commentRepo,userProjectRepo ,users);
             _projectBll = new ProjectBLL(projectRepo, userProjectRepo, ticketRepo, ticketWatcherRepo, users);
         }
 
@@ -50,36 +50,8 @@ namespace SD_340_W22SD_Final_Project_Group6.Controllers
         {
             try
             {
-                if (id == null || _ticketBll.GetTicket(id) == null)
-                {
-                    return NotFound();
-                }
-
-                Ticket ticket = _ticketBll.GetTicketDetails(id);
-
-				List<UserProject> projectUsers = _projectBll.GetProjectUsers(ticket.ProjectId).ToList();
-
-				CreateTicketVM vm = new CreateTicketVM
-				{
-                    Id = id,
-                    Title = ticket.Title,
-                    Body = ticket.Body,
-                    RequiredHours = ticket.RequiredHours,
-                    ApplicationUser = ticket.ApplicationUser,
-                    TicketWatchers = ticket.TicketWatchers.ToList(),
-                    Comments = ticket.Comments.ToList(),
-                    Owner = ticket.Owner,
-                    TicketPriority = ticket.TicketPriority,
-                    Completed = ticket.Completed,
-                    Project = ticket.Project,
-					Developers = projectUsers.Select(d => new SelectListItem
-					{
-						Value = d.ApplicationUser.Id,
-						Text = d.ApplicationUser.UserName
-					}).ToList()
-				};
-
-				return View(vm);
+                 CreateTicketVM vm = _ticketBll.BuildTicketVM(id);
+                 return View(vm);
             }
 			catch (Exception ex)
             {
@@ -140,50 +112,9 @@ namespace SD_340_W22SD_Final_Project_Group6.Controllers
         {   
             try
 			{
-                if (id == null)
-                {
-                    return NotFound();
-                }
-
-                Ticket ticket = _ticketBll.GetTicket(id);
-
-                if(ticket == null)
-                {
-                    return NotFound();
-                } 
-                else
-                {
-                    ticket.Owner = _users.Users.FirstOrDefault(u => u.Id == ticket.ApplicationUser);
-
-                    Project project = _projectBll.GetProject(ticket.ProjectId);
-
-                    List<UserProject> projectUsers = _projectBll.GetProjectUsers(project.Id).ToList();
-
-                    CreateTicketVM vm = new CreateTicketVM
-                    {
-                        Developers = projectUsers.Select(d => new SelectListItem
-                        {
-                            Value = d.ApplicationUser.Id,
-                            Text = d.ApplicationUser.UserName
-                        }).ToList(),
-                        Project = project,
-                        ProjectId = project.Id,
-						Id = id,
-						Title = ticket.Title,
-						Body = ticket.Body,
-						RequiredHours = ticket.RequiredHours,
-						ApplicationUser = ticket.ApplicationUser,
-						TicketWatchers = ticket.TicketWatchers.ToList(),
-                        Owner = ticket.Owner,
-						Comments = ticket.Comments.ToList(),
-						TicketPriority = ticket.TicketPriority,
-						Completed = ticket.Completed,
-					};
-
-                    return View(vm);
-                }
-                
-			}
+                CreateTicketVM vm = _ticketBll.BuildTicketVM(id);
+                 return View(vm);
+            }
 			catch (Exception ex)
 			{
 				return NotFound();
@@ -210,14 +141,11 @@ namespace SD_340_W22SD_Final_Project_Group6.Controllers
                 {
                     return View(vm);
                 }
-                
-
             } 
             catch (Exception ex)
             {
                 return NotFound();
             }
-           
         }
 
 		[Authorize(Roles = "ProjectManager")]

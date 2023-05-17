@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CodeAnalysis.Differencing;
 using Microsoft.EntityFrameworkCore;
 using SD_340_W22SD_Final_Project_Group6.Data;
@@ -14,14 +15,16 @@ namespace SD_340_W22SD_Final_Project_Group6.BLL
         private IRepository<Ticket> _ticketRepo;
         private IRepository<TicketWatcher> _ticketWatcherRepo;
         private IRepository<Comment> _commentRepo;
+        private IRepository<UserProject> _userProjectRepo;
         private readonly UserManager<ApplicationUser> _users;
 
-        public TicketBLL(IRepository<Project> projectRepo, IRepository<Ticket> ticketRepo, IRepository<TicketWatcher> ticketWatcherRepo, IRepository<Comment> commentRepo, UserManager<ApplicationUser> users)
+        public TicketBLL(IRepository<Project> projectRepo, IRepository<Ticket> ticketRepo, IRepository<TicketWatcher> ticketWatcherRepo, IRepository<Comment> commentRepo,IRepository<UserProject> userProjectRepo ,UserManager<ApplicationUser> users)
         {
             _projectRepo = projectRepo;
             _ticketRepo = ticketRepo;
             _ticketWatcherRepo = ticketWatcherRepo;
             _commentRepo = commentRepo;
+            _userProjectRepo = userProjectRepo;
             _users = users;
         }
         public List<Ticket> ListTickets()
@@ -156,6 +159,57 @@ namespace SD_340_W22SD_Final_Project_Group6.BLL
 
                 // update to ticket
                 _ticketRepo.Update(ticket);
+            }
+        }
+        public CreateTicketVM BuildTicketVM(int? id)
+        {
+			if (id == null || _ticketRepo.GetById(id) == null)
+			{
+				throw new NullReferenceException("Ticket not found");
+			}
+            else
+            {
+				Ticket ticket = _ticketRepo.GetById(id);
+
+                ticket.Project = _projectRepo.GetById(ticket.ProjectId);
+				ticket.Owner = _users.Users.FirstOrDefault(u => u.Id == ticket.ApplicationUser);
+
+                List<TicketWatcher> watchers  = _ticketWatcherRepo.GetAll().Where(tw => tw.TicketId == id).ToList();
+                if(watchers != null)
+                {
+                    foreach (TicketWatcher watcher in watchers)
+                    {
+                        watcher.Watcher = _users.Users.FirstOrDefault(u => u.Id == watcher.WatcherId);
+                        watcher.Ticket = _ticketRepo.GetById(id);
+                    }
+                }
+                
+                List<Comment> comments = _commentRepo.GetAll().Where(c => c.TicketId == id).ToList();
+                
+                List<UserProject> projectUsers = _userProjectRepo.GetAll().Where(up => up.ProjectId == ticket.ProjectId).ToList();
+
+                CreateTicketVM vm = new CreateTicketVM
+                {
+                    Id = id,
+                    ProjectId = (int)ticket.ProjectId,
+					Title = ticket.Title,
+					Body = ticket.Body,
+					RequiredHours = ticket.RequiredHours,
+					ApplicationUser = ticket.ApplicationUser,
+					TicketWatchers = watchers,
+					Comments = comments,
+					Owner = ticket.Owner,
+					TicketPriority = ticket.TicketPriority,
+					Completed = ticket.Completed,
+					Project = ticket.Project,
+					Developers = projectUsers.Select(d => new SelectListItem
+					{
+						Value = d.ApplicationUser.Id,
+						Text = d.ApplicationUser.UserName
+					}).ToList()
+				};
+
+                return vm;
             }
         }
 
