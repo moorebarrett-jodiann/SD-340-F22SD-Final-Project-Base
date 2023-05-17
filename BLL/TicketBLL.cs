@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.CodeAnalysis.Differencing;
 using Microsoft.EntityFrameworkCore;
 using SD_340_W22SD_Final_Project_Group6.Data;
 using SD_340_W22SD_Final_Project_Group6.Models;
@@ -128,6 +129,33 @@ namespace SD_340_W22SD_Final_Project_Group6.BLL
 
                 // add ticket to db
                 _ticketRepo.Create(ticket);
+            }
+        }
+
+        public void EditTicket(CreateTicketVM vm)
+        {
+            if (vm == null)
+            {
+                throw new NullReferenceException("Ticket cannot be edited");
+            }
+            else
+            {
+                // retrive ticket
+                Ticket ticket = _ticketRepo.GetById(vm.Id);
+
+
+                // fetch ticket owner using Application User
+                ticket.Owner = _users.Users.FirstOrDefault(u => u.Id == vm.ApplicationUser);
+                
+                // Update Ticket properties
+                ticket.Title = vm.Title;
+                ticket.Body = vm.Body;
+                ticket.RequiredHours = vm.RequiredHours;
+                ticket.ApplicationUser = vm.ApplicationUser;
+
+
+                // update to ticket
+                _ticketRepo.Update(ticket);
             }
         }
 
