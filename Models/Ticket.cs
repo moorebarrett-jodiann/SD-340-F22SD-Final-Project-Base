@@ -23,6 +23,7 @@ namespace SD_340_W22SD_Final_Project_Group6.Models
         [ForeignKey("ApplicationUser")]
         [DisplayName("Owner :")]
         public ApplicationUser? Owner { get; set; }
+        public string ApplicationUser { get; set; }
 
         [DisplayName("Project :")]
         public Project? Project { get; set; }
