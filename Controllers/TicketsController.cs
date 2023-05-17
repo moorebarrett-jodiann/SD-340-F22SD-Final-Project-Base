@@ -19,14 +19,12 @@ namespace SD_340_W22SD_Final_Project_Group6.Controllers
     [Authorize]
     public class TicketsController : Controller
     {
-        private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _users;
         private readonly TicketBLL _ticketBll;
         private readonly ProjectBLL _projectBll;        
 
-        public TicketsController(ApplicationDbContext context, IRepository<Ticket> ticketRepo, UserManager<ApplicationUser> users, IRepository<Project> projectRepo, IRepository<TicketWatcher> ticketWatcherRepo, IRepository<Comment> commentRepo, IRepository<UserProject> userProjectRepo)
+        public TicketsController( IRepository<Ticket> ticketRepo, UserManager<ApplicationUser> users, IRepository<Project> projectRepo, IRepository<TicketWatcher> ticketWatcherRepo, IRepository<Comment> commentRepo, IRepository<UserProject> userProjectRepo)
         {
-            _context = context;
             _users = users;
             _ticketBll = new TicketBLL(projectRepo, ticketRepo, ticketWatcherRepo, commentRepo, users);
             _projectBll = new ProjectBLL(projectRepo, userProjectRepo, ticketRepo, ticketWatcherRepo, users);
@@ -139,29 +137,58 @@ namespace SD_340_W22SD_Final_Project_Group6.Controllers
         // GET: Tickets/Edit/5
         [Authorize(Roles = "ProjectManager")]
         public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null || _context.Tickets == null)
-            {
-                return NotFound();
-            }
+        {   
+            try
+			{
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            var ticket = await _context.Tickets.Include(t => t.Owner).FirstAsync(t => t.Id == id);
-      
-            if (ticket == null)
-            {
-                return NotFound();
-            }
+                Ticket ticket = _ticketBll.GetTicket(id);
 
-            List<ApplicationUser> results = _context.Users.Where(u => u != ticket.Owner).ToList();
+                if(ticket == null)
+                {
+                    return NotFound();
+                } 
+                else
+                {
+                    ticket.Owner = _users.Users.FirstOrDefault(u => u.Id == ticket.ApplicationUser);
 
-            List<SelectListItem> currUsers = new List<SelectListItem>();
-            results.ForEach(r =>
-            {
-                currUsers.Add(new SelectListItem(r.UserName, r.Id.ToString()));
-            });
-            ViewBag.Users = currUsers;
+                    Project project = _projectBll.GetProject(ticket.ProjectId);
 
-            return View(ticket);
+                    List<UserProject> projectUsers = _projectBll.GetProjectUsers(project.Id).ToList();
+
+                    CreateTicketVM vm = new CreateTicketVM
+                    {
+                        Developers = projectUsers.Select(d => new SelectListItem
+                        {
+                            Value = d.ApplicationUser.Id,
+                            Text = d.ApplicationUser.UserName
+                        }).ToList(),
+                        Project = project,
+                        ProjectId = project.Id,
+						Id = id,
+						Title = ticket.Title,
+						Body = ticket.Body,
+						RequiredHours = ticket.RequiredHours,
+						ApplicationUser = ticket.ApplicationUser,
+						TicketWatchers = ticket.TicketWatchers.ToList(),
+                        Owner = ticket.Owner,
+						Comments = ticket.Comments.ToList(),
+						TicketPriority = ticket.TicketPriority,
+						Completed = ticket.Completed,
+					};
+
+                    return View(vm);
+                }
+                
+			}
+			catch (Exception ex)
+			{
+				return NotFound();
+			}
+         
         }        
 
         // POST: Tickets/Edit/5
@@ -170,36 +197,27 @@ namespace SD_340_W22SD_Final_Project_Group6.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "ProjectManager")]
-        public async Task<IActionResult> Edit(int id,string userId, [Bind("Id,Title,Body,RequiredHours")] Ticket ticket)
+        public async Task<IActionResult> Edit([Bind("Id,Title,Body,RequiredHours,TicketPriority,ProjectId,ApplicationUser,Developers")] CreateTicketVM vm)
         {
-            if (id != ticket.Id)
+            try
+            {
+                if (ModelState.IsValid)
+                {
+					_ticketBll.EditTicket(vm);
+					return RedirectToAction(nameof(Edit), new { id = vm.Id });
+				} 
+                else
+                {
+                    return View(vm);
+                }
+                
+
+            } 
+            catch (Exception ex)
             {
                 return NotFound();
             }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    ApplicationUser currUser = _context.Users.FirstOrDefault(u => u.Id == userId);
-                    ticket.Owner = currUser;
-                    _context.Update(ticket);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!TicketExists(ticket.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Edit), new {id = ticket.Id});
-            }
-            return View(ticket);
+           
         }
 
 		[Authorize(Roles = "ProjectManager")]

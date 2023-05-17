@@ -38,22 +38,25 @@ namespace SD_340_W22SD_Final_Project_Group6.Controllers
         {
             try
             {
-				List<ApplicationUser> allUsers = (List<ApplicationUser>)await _users.GetUsersInRoleAsync("Developer");
-
-				List<SelectListItem> users = new List<SelectListItem>();
-				allUsers.ForEach(au =>
-				{
-					users.Add(new SelectListItem(au.UserName, au.Id.ToString()));
-				});
-				ViewBag.Users = users;
 
 				ApplicationUser currentUser = await _users.GetUserAsync(User); // get user's all data
 
                 List<Project> projects = await _projectBll.ListProjects(sortOrder, sort, userId, currentUser);
-
+                
+                List<ApplicationUser> developers = (List<ApplicationUser>)await _users.GetUsersInRoleAsync("Developer");
+                
                 X.PagedList.IPagedList<Project> projList = projects.ToPagedList(page ?? 1, 3);
-
-                return View(projList);
+                
+                ListProjectsVM vm = new ListProjectsVM
+                {
+                    Projects = projList,
+                    Developers = developers.Select(d => new SelectListItem
+                    {
+                        Value = d.Id,
+                        Text = d.UserName
+                    }).ToList()
+                };
+                return View(vm) ;
             }
             catch (Exception ex)
             {

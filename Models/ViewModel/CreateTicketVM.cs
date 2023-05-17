@@ -14,7 +14,7 @@ namespace SD_340_W22SD_Final_Project_Group6.Models.ViewModel
 		public List<SelectListItem> Developers { get; set; } = new List<SelectListItem>();
 		public List<TicketWatcher>? TicketWatchers { get; set; } = new List<TicketWatcher>();
 		public List<Comment> Comments { get; set; } = new List<Comment>();
-		public Project Project { get; set; }
+		public Project? Project { get; set; }
 		public int ProjectId { get; set; }
 		public Priority? TicketPriority { get; set; }
 		public bool? Completed { get; set; } = false;
