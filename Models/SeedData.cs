@@ -48,7 +48,7 @@ namespace SD_340_W22SD_Final_Project_Group6.Models
                 seedAdminUser.PasswordHash = hashed3;
                 await userManager.CreateAsync(seedAdminUser);
                 await userManager.AddToRoleAsync(seedAdminUser, "Admin");
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync(); 
             }
 
         }
